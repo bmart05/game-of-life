@@ -19,6 +19,10 @@ Compile the program using `make`. You can then open `.rle` files using the follo
 ``` sh
 ./conway <path-to-file>
 ```
+or you can launch a blank 50x50 grid by running
+``` sh
+./conway
+```
 ## Screenshots
 <img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/0cc39232-0413-4bb9-8904-9030754ea33c" />
 
