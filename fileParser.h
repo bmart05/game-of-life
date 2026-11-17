@@ -6,7 +6,7 @@
 struct PatternMetadata {
     std::string name;
     std::string author;
-    std::vector<std::string> comments;
+    std::string comments; //usually multiple lines, will be split with \n
 };
 
 struct PatternData {
@@ -17,6 +17,7 @@ struct PatternData {
 };
 
 class FileParser {
+public:
     static PatternData openPattern(std::string filepath);
     static std::vector<int> generateGrid(std::string contents);
 };

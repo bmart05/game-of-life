@@ -10,7 +10,7 @@ int main() {
     CellularAutomata grid;
     Display display;
     
-    PatternData pattern = FileParser::openPattern("")
+    PatternData pattern = FileParser::openPattern("patterns/lwssgun1.rle");
 
     constexpr std::array<int, 50 * 50> initial_grid = {{
         // Row 0-1

@@ -64,7 +64,7 @@ void CellularAutomata::cycle()
                 }
                 else {
                     nextGrid[targetCell] = DEAD;
-                }
+                } 
             }
         }
     }
@@ -82,5 +82,6 @@ bool CellularAutomata::set_grid(std::array<int, GRID_WIDTH * GRID_HEIGHT> newGri
 
 void CellularAutomata::reset_grid()
 {
+    generations = 0;
     grid.fill(DEAD);
 }
