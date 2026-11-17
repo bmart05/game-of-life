@@ -11,8 +11,8 @@ struct PatternMetadata {
 
 struct PatternData {
     PatternMetadata metadata;
-    uint8_t width;
-    uint8_t height;
+    int width;
+    int height;
     std::string contents;
 };
 

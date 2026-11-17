@@ -108,6 +108,7 @@ void Display::render(const int *grid, std::optional<DebugInfo> debug)
 
 
     //-- DRAW GRID LINES -- (thanks gemini)
+    if(renderGridLines) {
     // Subtle dark gray for grid lines
     SDL_SetRenderDrawColor(impl->renderer, 40, 40, 40, 255);
 
@@ -122,6 +123,7 @@ void Display::render(const int *grid, std::optional<DebugInfo> debug)
         float py = y * cell_h;
         SDL_RenderLine(impl->renderer, 0.0f, py, static_cast<float>(impl->window_width), py);
     }
+}
 
 
     //draw debug text

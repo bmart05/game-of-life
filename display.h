@@ -13,6 +13,8 @@ struct DebugInfo {
 
 class Display {
 public:
+    bool renderGridLines = true;
+
     Display();
     ~Display();
 

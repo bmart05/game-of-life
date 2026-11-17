@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+
 int main(int argc, char **argv) {
     if(argc < 1) {
         return 0;
@@ -13,14 +16,22 @@ int main(int argc, char **argv) {
     
     PatternData pattern = FileParser::openPattern(argv[1]);
     FileParser::printPatternData(pattern);
+
     
     Display display;
     CellularAutomata grid(pattern.width, pattern.height);
+    
+    //Disable grid lines if pattern size is bigger than half the window
+    //There needs to be enough space to actually render them, and they take half the screen
+    if(pattern.width >= (WINDOW_WIDTH/2) || pattern.height >= (WINDOW_HEIGHT/2)) {
+        std::cout << "Disabling grid lines" << "\n";
+        display.renderGridLines = false;
+    }
 
     auto patternGrid = FileParser::generateGrid(pattern.contents, pattern.width, pattern.height);
     grid.set_grid(patternGrid);
 
-    display.init("Game of Life", 800, 600, grid.gridWidth, grid.gridHeight);
+    display.init("Game of Life", WINDOW_WIDTH, WINDOW_HEIGHT, grid.gridWidth, grid.gridHeight);
 
 
     auto targetStep = std::chrono::milliseconds(250);
