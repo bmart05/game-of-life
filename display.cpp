@@ -16,6 +16,38 @@ struct Display::Impl {
     int tex_width;
     int tex_height;
     std::vector<uint32_t> pixelBuffer;
+
+    const std::array<SDL_Color, 19> colours = {{
+        {  0,   0,   0, 255}, //  0: Dead (Black)
+
+        // Reds -> Oranges
+        {255,  45,  45, 255}, //  1: Crimson Red (Newborn)
+        {255,  85,  35, 255}, //  2: Red-Orange
+        {255, 125,  25, 255}, //  3: Deep Orange
+        {255, 165,  20, 255}, //  4: Warm Orange
+
+        // Yellows -> Limes
+        {255, 205,  25, 255}, //  5: Amber / Gold
+        {245, 235,  35, 255}, //  6: Bright Yellow
+        {195, 240,  45, 255}, //  7: Yellow-Lime
+        {135, 235,  65, 255}, //  8: Lime Green
+
+        // Greens -> Teals
+        { 70, 225,  95, 255}, //  9: Emerald Green
+        { 40, 215, 145, 255}, // 10: Seafoam / Mint
+        { 30, 205, 195, 255}, // 11: Turquoise / Teal
+
+        // Cyans -> Blues
+        { 30, 185, 240, 255}, // 12: Bright Cyan
+        { 40, 145, 255, 255}, // 13: Sky Blue
+        { 55, 105, 250, 255}, // 14: Dodger Blue
+        { 75,  70, 240, 255}, // 15: Cobalt Blue
+
+        // Indigos -> Violets
+        {105,  55, 230, 255}, // 16: Indigo
+        {135,  50, 215, 255}, // 17: Royal Purple
+        {160,  45, 190, 255}  // 18: Deep Violet (Old / Stable)
+    }};
 };
 
 Display::Display() : impl(std::make_unique<Impl>()) {}
@@ -51,14 +83,20 @@ bool Display::init(const std::string title, int window_width, int window_height,
 
     SDL_SetTextureScaleMode(impl->renderFrame, SDL_SCALEMODE_NEAREST);
 
-
     return true;
 }
+
 
 void Display::render(const int *grid, std::optional<DebugInfo> debug)
 {
     for(int i = 0; i < ((impl->tex_width)*(impl->tex_height)); i++) {
-        impl->pixelBuffer[i] = grid[i] ? 0xFFFFFFFF : 0xFF000000;
+        int age = std::min(grid[i], 18);
+        SDL_Color cellColour = impl->colours[age];
+
+        impl->pixelBuffer[i] = (static_cast<Uint32>(cellColour.a) << 24) |
+                               (static_cast<Uint32>(cellColour.r) << 16) |
+                               (static_cast<Uint32>(cellColour.g) << 8)  |
+                               (static_cast<Uint32>(cellColour.b));
     }
     SDL_UpdateTexture(impl->renderFrame, nullptr, impl->pixelBuffer.data(), impl->tex_width * sizeof(uint32_t));
 
@@ -94,6 +132,12 @@ void Display::render(const int *grid, std::optional<DebugInfo> debug)
 
         SDL_SetRenderDrawColor(impl->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderDebugText(impl->renderer, 0, 0, buf);
+
+        res = std::format_to_n(buf, sizeof(buf) - 1, "Speed: {}", *debug->targetStep);
+        *res.out = '\0';
+
+        SDL_SetRenderDrawColor(impl->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        SDL_RenderDebugText(impl->renderer, 0, 10, buf);
     }
 
     SDL_RenderPresent(impl->renderer);

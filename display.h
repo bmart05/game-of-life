@@ -3,10 +3,12 @@
 #include <string>
 #include <memory>
 #include <optional>
+#include <chrono>
 
 struct DebugInfo {
     int generations;
     bool paused;
+    std::chrono::milliseconds* targetStep;
 };
 
 class Display {

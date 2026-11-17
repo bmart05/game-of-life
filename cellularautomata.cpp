@@ -37,7 +37,7 @@ bool CellularAutomata::isAlive(int x, int y)
     if(y < 0 || y >= GRID_HEIGHT) { return false; }
 
     int gridPosition = y * GRID_WIDTH + x;
-    if(grid[gridPosition] == ALIVE) { 
+    if(grid[gridPosition] >= 1) { 
         return true;
     }
     return false;
@@ -55,7 +55,7 @@ void CellularAutomata::cycle()
                     nextGrid[targetCell] = DEAD;
                 }
                 else {
-                    nextGrid[targetCell] = ALIVE;
+                    nextGrid[targetCell] = std::min(MAX_CELLAGE, nextGrid[targetCell] + 1); //increase age of cell every cycle (up to the max age)
                 }
             }
             else {
@@ -78,4 +78,9 @@ bool CellularAutomata::set_grid(std::array<int, GRID_WIDTH * GRID_HEIGHT> newGri
 
     std::swap(grid, newGrid);
     return true;
+}
+
+void CellularAutomata::reset_grid()
+{
+    grid.fill(DEAD);
 }
