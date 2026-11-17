@@ -21,7 +21,10 @@ Compile the program using `make`. You can then open `.rle` files using the follo
 ```
 ## Screenshots
 <img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/0cc39232-0413-4bb9-8904-9030754ea33c" />
+
 _Analog watch example_
+
 <img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/33881c30-7db7-45ce-9930-f36d8bbacd62" />
+
 _Glider loop example_
 
