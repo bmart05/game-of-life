@@ -135,5 +135,5 @@ void FileParser::printPatternData(PatternData pattern)
     std::cout << "Author: " << pattern.metadata.author << "\n";
     std::cout << "Comments: \n" << pattern.metadata.comments << "\n";
     std::cout << "Width: " << +pattern.width << " Height: " << +pattern.height << "\n"; //adding + before width and height promotes them to an integer
-    std::cout << "Data: " << pattern.contents << "\n";
+    //std::cout << "Data: " << pattern.contents << "\n";
 }

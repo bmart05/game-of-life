@@ -1,25 +1,30 @@
 #include "cellularautomata.h"
 
-CellularAutomata::CellularAutomata()
+CellularAutomata::CellularAutomata(int width, int height)
 {
+    gridWidth = width;
+    gridHeight = height;
+
+    grid.assign(width * height, DEAD); //initialise grid with dead cells
+    nextGrid.assign(width * height, DEAD);
 }
 
 void CellularAutomata::setTile(int x, int y, int status)
 {
-    if(x < 0 || x >= GRID_WIDTH) { return; }
-    if(y < 0 || y >= GRID_HEIGHT) { return; }
+    if(x < 0 || x >= gridWidth) { return; }
+    if(y < 0 || y >= gridHeight) { return; }
 
-    grid[y * GRID_WIDTH + x] = status; //row-major order (top to bottom)
+    grid[y * gridWidth + x] = status; //row-major order (top to bottom)
 }
 
 int CellularAutomata::getAliveNeighbours(int x, int y)
 {
     int alive = 0;
     for(int i = x-1; i <= x+1; i++) {
-        if(i < 0 || i > GRID_WIDTH) { continue; }
+        if(i < 0 || i > gridWidth) { continue; }
 
         for(int j = y-1; j <= y+1; j++) {
-            if(j < 0 || j > GRID_HEIGHT) { continue; }
+            if(j < 0 || j > gridHeight) { continue; }
 
             if(i == x && j == y) { continue; }
             
@@ -33,10 +38,10 @@ int CellularAutomata::getAliveNeighbours(int x, int y)
 
 bool CellularAutomata::isAlive(int x, int y)
 {
-    if(x < 0 || x >= GRID_WIDTH) { return false; }
-    if(y < 0 || y >= GRID_HEIGHT) { return false; }
+    if(x < 0 || x >= gridWidth) { return false; }
+    if(y < 0 || y >= gridHeight) { return false; }
 
-    int gridPosition = y * GRID_WIDTH + x;
+    int gridPosition = y * gridWidth + x;
     if(grid[gridPosition] >= 1) { 
         return true;
     }
@@ -45,10 +50,10 @@ bool CellularAutomata::isAlive(int x, int y)
 
 void CellularAutomata::cycle()
 {
-    for(int y = 0; y < GRID_HEIGHT; y++) {
-        for(int x = 0; x < GRID_WIDTH; x++) {
+    for(int y = 0; y < gridHeight; y++) {
+        for(int x = 0; x < gridWidth; x++) {
             int aliveNeighbours = getAliveNeighbours(x, y);
-            int targetCell = y * GRID_WIDTH + x;
+            int targetCell = y * gridWidth + x;
 
             if(isAlive(x,y)) {
                 if(aliveNeighbours < 2 || aliveNeighbours > 3) {
@@ -72,7 +77,7 @@ void CellularAutomata::cycle()
     generations++;
 }
 
-bool CellularAutomata::set_grid(std::array<int, GRID_WIDTH * GRID_HEIGHT> newGrid)
+bool CellularAutomata::set_grid(std::vector<int> newGrid)
 {
     if(newGrid.size() != grid.size()) { return false; }
 
@@ -83,5 +88,5 @@ bool CellularAutomata::set_grid(std::array<int, GRID_WIDTH * GRID_HEIGHT> newGri
 void CellularAutomata::reset_grid()
 {
     generations = 0;
-    grid.fill(DEAD);
+    std::fill(grid.begin(), grid.end(), DEAD);
 }
