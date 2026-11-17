@@ -19,5 +19,7 @@ struct PatternData {
 class FileParser {
 public:
     static PatternData openPattern(std::string filepath);
-    static std::vector<int> generateGrid(std::string contents);
+    static std::vector<int> generateGrid(std::string pattern, int width, int height);
+    static void printPatternData(PatternData pattern);
 };
+ 

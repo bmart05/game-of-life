@@ -4,13 +4,25 @@
 #include <SDL3/SDL.h>
 #include <chrono>
 #include <iostream>
-
+#include <string>
 
 int main() {
     CellularAutomata grid;
     Display display;
     
     PatternData pattern = FileParser::openPattern("patterns/lwssgun1.rle");
+    FileParser::printPatternData(pattern);
+
+    auto patternGrid = FileParser::generateGrid(pattern.contents, pattern.width, pattern.height);
+
+    for (int y = 0; y < pattern.height; ++y) {
+        for (int x = 0; x < pattern.width; ++x) {
+            std::cout << (patternGrid[y * pattern.width + x] ? 'O' : '.');
+        }
+        std::cout << '\n';
+    }
+    
+    
 
     constexpr std::array<int, 50 * 50> initial_grid = {{
         // Row 0-1
