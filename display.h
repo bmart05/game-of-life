@@ -4,11 +4,13 @@
 #include <memory>
 #include <optional>
 #include <chrono>
+#include "fileParser.h"
 
 struct DebugInfo {
     int generations;
     bool paused;
     std::chrono::milliseconds* targetStep;
+    PatternMetadata metadata;
 };
 
 class Display {

@@ -128,18 +128,24 @@ void Display::render(const int *grid, std::optional<DebugInfo> debug)
 
     //draw debug text
     if(debug) {
-        char buf[32];
-        auto res = std::format_to_n(buf, sizeof(buf) - 1, "Generation: {} Paused: {}", debug->generations, debug->paused);
+        char buf[256];
+        auto res = std::format_to_n(buf, sizeof(buf) - 1, "Name: {} Author: {}", debug->metadata.name, debug->metadata.author);
         *res.out = '\0';
 
         SDL_SetRenderDrawColor(impl->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderDebugText(impl->renderer, 0, 0, buf);
 
-        res = std::format_to_n(buf, sizeof(buf) - 1, "Speed: {}", *debug->targetStep);
+        res = std::format_to_n(buf, sizeof(buf) - 1, "Generation: {} Paused: {}", debug->generations, debug->paused);
         *res.out = '\0';
 
         SDL_SetRenderDrawColor(impl->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderDebugText(impl->renderer, 0, 10, buf);
+
+        res = std::format_to_n(buf, sizeof(buf) - 1, "Speed: {}", *debug->targetStep);
+        *res.out = '\0';
+
+        SDL_SetRenderDrawColor(impl->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        SDL_RenderDebugText(impl->renderer, 0, 20, buf);
     }
 
     SDL_RenderPresent(impl->renderer);

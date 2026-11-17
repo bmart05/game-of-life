@@ -10,26 +10,38 @@
 #define WINDOW_HEIGHT 600
 
 int main(int argc, char **argv) {
-    if(argc < 1) {
-        return 0;
+    PatternData pattern;
+    std::string filepath;
+    bool loadFromFile = false;
+
+    if(argc > 1) {
+        filepath = argv[1];
+        pattern = FileParser::openPattern(filepath);
+        FileParser::printPatternData(pattern);
+        loadFromFile = true;
     }
     
-    PatternData pattern = FileParser::openPattern(argv[1]);
-    FileParser::printPatternData(pattern);
+
+
+    int gridWidth = (loadFromFile) ? pattern.width : 50;
+    int gridHeight = (loadFromFile) ? pattern.height : 50;
 
     
     Display display;
-    CellularAutomata grid(pattern.width, pattern.height);
+    CellularAutomata grid(gridWidth, gridHeight);
     
-    //Disable grid lines if pattern size is bigger than half the window
-    //There needs to be enough space to actually render them, and they take half the screen
-    if(pattern.width >= (WINDOW_WIDTH/2) || pattern.height >= (WINDOW_HEIGHT/2)) {
-        std::cout << "Disabling grid lines" << "\n";
-        display.renderGridLines = false;
-    }
+    
+    if(loadFromFile) { //Only run these if a pattern is loaded
+        //Disable grid lines if pattern size is bigger than half the window
+        //There needs to be enough space to actually render them, and they take half the screen
+        if(pattern.width >= (WINDOW_WIDTH/2) || pattern.height >= (WINDOW_HEIGHT/2)) {
+            std::cout << "Disabling grid lines" << "\n";
+            display.renderGridLines = false;
+        }
 
-    auto patternGrid = FileParser::generateGrid(pattern.contents, pattern.width, pattern.height);
-    grid.set_grid(patternGrid);
+        auto patternGrid = FileParser::generateGrid(pattern.contents, pattern.width, pattern.height);
+        grid.set_grid(patternGrid);
+    }
 
     display.init("Game of Life", WINDOW_WIDTH, WINDOW_HEIGHT, grid.gridWidth, grid.gridHeight);
 
@@ -39,8 +51,14 @@ int main(int argc, char **argv) {
     auto last_time = std::chrono::steady_clock::now();
     auto accumulator = std::chrono::steady_clock::duration{0};
 
+    PatternMetadata metadata = (loadFromFile) ? pattern.metadata : PatternMetadata{
+        "",
+        "",
+        ""
+    };
+
     DebugInfo debugInfo = {
-        0, true, &targetStep
+        0, true, &targetStep, metadata
     };
 
     bool running = true;
@@ -59,6 +77,9 @@ int main(int argc, char **argv) {
                     break;
                 case SDL_EVENT_KEY_DOWN:
                     switch(event.key.key) {
+                        case SDLK_ESCAPE:
+                            running = false;
+                            break;
                         case SDLK_SPACE:
                             paused = !paused;
                             debugInfo.paused = !debugInfo.paused;
